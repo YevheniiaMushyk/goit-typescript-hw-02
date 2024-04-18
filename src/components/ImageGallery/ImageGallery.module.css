@@ -1,0 +1,17 @@
+.galleryList {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 1.5em;
+	padding: 1em;
+	max-width: 1440px;
+	margin: 0 auto;
+}
+
+.galleryItem {
+	flex-basis: calc((100% - 4.5em) / 4);
+	border-radius: 1em;
+	box-shadow: 3px 3px 8px 3px rgba(157, 188, 152, 0.75), -3px -3px 8px 3px rgba(157, 188, 152, 0.75);
+	overflow: hidden;
+}
