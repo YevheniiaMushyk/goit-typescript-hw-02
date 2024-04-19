@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import Loader from "../Loader/Loader";
 import SearchBar from "../SearchBar/SearchBar";
@@ -7,21 +7,22 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import ImageModal from "../ImageModal/ImageModal";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
+import { Image, Response } from "./App.types";
 
 axios.defaults.baseURL = "https://api.unsplash.com/search/";
-const ACCESS_KEY = "6ISQi9M4rNBkl7LU8EVOjyrOACzSzwqNAvY8Ysl6IZo";
+const ACCESS_KEY: string = "6ISQi9M4rNBkl7LU8EVOjyrOACzSzwqNAvY8Ysl6IZo";
 
 const App = () => {
-	const [searchQuery, setSearchQuery] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
-	const [isError, setIsError] = useState(false);
-	const [isLoadMore, setIsLoadMore] = useState(false);
-	const [imageGallery, setImageGallery] = useState([]);
-	const [errorMessage, setErrorMessage] = useState("");
-	const [queryPage, setQueryPage] = useState(1);
-	const [modalIsOpen, setIsOpen] = useState(false);
-	const [selectedImage, setSelectedImage] = useState(null);
-	const [isScrollToTop, setScrollToTop] = useState(false);
+	const [searchQuery, setSearchQuery] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isError, setIsError] = useState<boolean>(false);
+	const [isLoadMore, setIsLoadMore] = useState<boolean>(false);
+	const [imageGallery, setImageGallery] = useState<Image[]>([]);
+	const [errorMessage, setErrorMessage] = useState<string>("");
+	const [queryPage, setQueryPage] = useState<number>(1);
+	const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+	const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+	const [isScrollToTop, setScrollToTop] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (!searchQuery) return;
@@ -31,9 +32,10 @@ const App = () => {
 				setIsLoading(true);
 				setIsLoadMore(false);
 
-				const data = await axios.get("photos", {
+				const data: AxiosResponse<Response> = await axios.get("search/photos", {
 					params: { client_id: ACCESS_KEY, query: searchQuery, page: queryPage, per_page: "28", orientation: "squarish" },
 				});
+
 				setImageGallery((prevGallery) => [...prevGallery, ...data.data.results]);
 
 				if (data.data.total <= 0) {
@@ -44,8 +46,9 @@ const App = () => {
 					setIsLoadMore(true);
 				}
 			} catch (err) {
+				const error = err as Error;
 				setIsError(true);
-				setErrorMessage(err.message);
+				setErrorMessage(error.message);
 			} finally {
 				setIsLoading(false);
 			}
@@ -54,7 +57,7 @@ const App = () => {
 		fetchImages();
 	}, [searchQuery, queryPage]);
 
-	const onSetSearchQuery = (query) => {
+	const onSetSearchQuery = (query: string) => {
 		setImageGallery([]);
 		setQueryPage(1);
 		setSearchQuery(query);
@@ -83,7 +86,7 @@ const App = () => {
 		});
 	};
 
-	function openModal(image) {
+	function openModal(image: Image) {
 		setIsOpen(true);
 		setSelectedImage(image);
 	}
@@ -103,7 +106,8 @@ const App = () => {
 			{!isError ? <ImageGallery imageGallery={imageGallery} openModal={openModal} /> : <ErrorMessage message={errorMessage} />}
 			{isLoadMore && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
 			{isScrollToTop && <ScrollToTop scrollToTop={scrollToTop} />}
-			{modalIsOpen && <ImageModal image={selectedImage} modalIsOpen={modalIsOpen} closeModal={closeModal} afterOpenModal={afterOpenModal} />}
+			{modalIsOpen && <ImageModal image={selectedImage} modalIsOpen={modalIsOpen} closeModal={closeModal} />}
+			{/* {modalIsOpen && <ImageModal image={selectedImage} modalIsOpen={modalIsOpen} closeModal={closeModal} afterOpenModal={afterOpenModal} />} */}
 		</>
 	);
 };
