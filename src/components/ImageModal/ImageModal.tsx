@@ -1,8 +1,13 @@
-import css from ".//ImageModal.module.css";
+import { FC } from "react";
 import Modal from "react-modal";
+import ImageModalProps from "./ImageModal.type";
+import css from ".//ImageModal.module.css";
 Modal.setAppElement("#root");
 
-const ImageModal = ({ image, modalIsOpen, closeModal }) => {
+const ImageModal: FC<ImageModalProps> = ({ image, modalIsOpen, closeModal }) => {
+	if (!image) {
+		return;
+	}
 	const dateString = image.created_at;
 	const date = new Date(dateString);
 	const formattedDate = date.toLocaleDateString();
@@ -40,7 +45,7 @@ const ImageModal = ({ image, modalIsOpen, closeModal }) => {
 				},
 			}}
 		>
-			<div tabIndex="-1" id="modal-content" className={css.modalContainer}>
+			<div tabIndex={-1} id="modal-content" className={css.modalContainer}>
 				<img className={css.modalImg} src={image.urls.regular} alt={image.alt_description} />
 				<ul className={css.modalList}>
 					<li className={css.modalItem}>

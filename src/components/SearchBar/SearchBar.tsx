@@ -1,11 +1,12 @@
 import css from "./SearchBar.module.css";
 import { CiSearch } from "react-icons/ci";
 import toast, { Toaster } from "react-hot-toast";
+import SearchBarProps from "./SearchBar.types";
 
-const SearchBar = ({ onSetSearchQuery }) => {
-	const handleSubmit = (evt) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSetSearchQuery }) => {
+	const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
-		const form = evt.target;
+		const form = evt.currentTarget;
 		const notify = () =>
 			toast.error("Enter a search query", {
 				style: {
@@ -20,7 +21,8 @@ const SearchBar = ({ onSetSearchQuery }) => {
 				},
 			});
 
-		const inputValue = form.elements.inputValue.value.trim();
+		const inputValue = (form.elements.namedItem("inputValue") as HTMLInputElement).value.trim();
+
 		if (!inputValue) {
 			notify();
 			return;

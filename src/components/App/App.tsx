@@ -10,7 +10,7 @@ import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import { Image, Response } from "./App.types";
 
 axios.defaults.baseURL = "https://api.unsplash.com/search/";
-const ACCESS_KEY: string = "6ISQi9M4rNBkl7LU8EVOjyrOACzSzwqNAvY8Ysl6IZo";
+const ACCESS_KEY: string = "xULULFXeUk1fNLMzyCQC1Jr-qjAdE5ry3zzME2EcM_A";
 
 const App = () => {
 	const [searchQuery, setSearchQuery] = useState<string>("");
@@ -32,17 +32,18 @@ const App = () => {
 				setIsLoading(true);
 				setIsLoadMore(false);
 
-				const data: AxiosResponse<Response> = await axios.get("search/photos", {
+				const { data }: AxiosResponse<Response> = await axios.get("search/photos", {
 					params: { client_id: ACCESS_KEY, query: searchQuery, page: queryPage, per_page: "28", orientation: "squarish" },
 				});
+				console.log(data);
 
-				setImageGallery((prevGallery) => [...prevGallery, ...data.data.results]);
+				setImageGallery((prevGallery) => [...prevGallery, ...data.results]);
 
-				if (data.data.total <= 0) {
+				if (data.total <= 0) {
 					setIsError(true);
 					setErrorMessage("Sorry, there are no images matching your search query. Please try again!");
 				}
-				if (queryPage <= data.data.total_pages) {
+				if (queryPage <= data.total_pages) {
 					setIsLoadMore(true);
 				}
 			} catch (err) {
@@ -106,8 +107,7 @@ const App = () => {
 			{!isError ? <ImageGallery imageGallery={imageGallery} openModal={openModal} /> : <ErrorMessage message={errorMessage} />}
 			{isLoadMore && <LoadMoreBtn handleLoadMore={handleLoadMore} />}
 			{isScrollToTop && <ScrollToTop scrollToTop={scrollToTop} />}
-			{modalIsOpen && <ImageModal image={selectedImage} modalIsOpen={modalIsOpen} closeModal={closeModal} />}
-			{/* {modalIsOpen && <ImageModal image={selectedImage} modalIsOpen={modalIsOpen} closeModal={closeModal} afterOpenModal={afterOpenModal} />} */}
+			{modalIsOpen && <ImageModal image={selectedImage} modalIsOpen={modalIsOpen} closeModal={closeModal} afterOpenModal={afterOpenModal} />}
 		</>
 	);
 };
