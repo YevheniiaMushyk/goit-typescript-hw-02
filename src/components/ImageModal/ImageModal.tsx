@@ -9,8 +9,8 @@ const ImageModal: FC<ImageModalProps> = ({ image, modalIsOpen, closeModal }) => 
 		return;
 	}
 	const dateString = image.created_at;
-	const date = new Date(dateString);
-	const formattedDate = date.toLocaleDateString();
+	const date = dateString ? new Date(dateString) : null;
+	const formattedDate = date ? date.toLocaleDateString() : null;
 	return (
 		<Modal
 			isOpen={modalIsOpen}
@@ -46,7 +46,7 @@ const ImageModal: FC<ImageModalProps> = ({ image, modalIsOpen, closeModal }) => 
 			}}
 		>
 			<div tabIndex={-1} id="modal-content" className={css.modalContainer}>
-				<img className={css.modalImg} src={image.urls.regular} alt={image.alt_description} />
+				<img className={css.modalImg} src={image.urls.regular} alt={image.alt_description || "No Description"} />
 				<ul className={css.modalList}>
 					<li className={css.modalItem}>
 						<p className={css.modalTitle}>Description</p>

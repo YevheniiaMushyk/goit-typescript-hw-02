@@ -1,5 +1,5 @@
 export interface Image {
-	alt_description: string | null;
+	alt_description: string | null | undefined;
 	alternative_slugs?: AlternativeSlugs | null;
 	asset_type?: string | null;
 	blur_hash?: string | null;
