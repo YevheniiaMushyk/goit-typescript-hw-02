@@ -9,7 +9,7 @@ import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import { Image, Response } from "./App.types";
 
-axios.defaults.baseURL = "https://api.unsplash.com/search/";
+axios.defaults.baseURL = "https://api.unsplash.com/";
 const ACCESS_KEY: string = "xULULFXeUk1fNLMzyCQC1Jr-qjAdE5ry3zzME2EcM_A";
 
 const App = () => {
